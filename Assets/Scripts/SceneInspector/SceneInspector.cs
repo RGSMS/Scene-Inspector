@@ -10,7 +10,7 @@ namespace RGSMS.Scene
         public string Path => _path;
 
         [SerializeField]
-        private int _buildIndex = 0;
+        private int _buildIndex = -1;
         public int BuildIndex => _buildIndex;
 
         public override string ToString() => _path;

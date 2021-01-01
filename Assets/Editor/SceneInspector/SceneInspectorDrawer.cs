@@ -9,7 +9,6 @@ namespace RGSMS.Scene
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            Color textColor = Color.white;
             string sceneName = string.Empty;
             GUIStyle normalStyle = new GUIStyle(EditorStyles.label);
             normalStyle.fontSize = 17;
@@ -40,12 +39,30 @@ namespace RGSMS.Scene
 
             #endregion
 
-            #region Select Scene Button
+            #region Select Scene Field
 
-            if (GUI.Button(rect, "Select Scene"))
+            SceneAsset sceneAsset = AssetDatabase.LoadAssetAtPath<SceneAsset>(scenePath.stringValue);
+
+            if(sceneAsset == null)
             {
-                string sceneCompletePath = EditorUtility.OpenFilePanel("Select Scene", Application.dataPath, "unity");
+                if(sceneBuildIndex.intValue != -1)
+                {
+                    string currentScenePath = SceneUtility.GetScenePathByBuildIndex(sceneBuildIndex.intValue);
 
+                    if (string.Compare(GetSceneName(currentScenePath), GetSceneName(scenePath.stringValue)) == 0)
+                    {
+                        scenePath.stringValue = currentScenePath;
+                        sceneAsset = AssetDatabase.LoadAssetAtPath<SceneAsset>(scenePath.stringValue);
+                    }
+                }
+            }
+
+            sceneAsset = (SceneAsset)EditorGUI.ObjectField(rect, "Scene:", sceneAsset, typeof(SceneAsset), false);
+
+            if(sceneAsset != null)
+            {
+                string sceneCompletePath = AssetDatabase.GetAssetPath(sceneAsset);
+                
                 string path = Application.dataPath;
                 for (int i = path.Length - 1; i >= 0; i--)
                 {
@@ -62,29 +79,13 @@ namespace RGSMS.Scene
 
             if (!string.IsNullOrEmpty(scenePath.stringValue))
             {
-                string path = scenePath.stringValue;
-                for (int i = path.Length - 1; i >= 0; i--)
-                {
-                    if (path[i] == '/')
-                    {
-                        sceneName = path.Remove(0, i + 1);
-
-                        break;
-                    }
-                }
-
-                sceneName = sceneName.Replace(".unity", string.Empty);
+                sceneName = GetSceneName(scenePath.stringValue);
 
                 int buildIndex = SceneUtility.GetBuildIndexByScenePath(scenePath.stringValue);
 
                 if (sceneBuildIndex.intValue != buildIndex)
                 {
                     sceneBuildIndex.intValue = buildIndex;
-                }
-
-                if (buildIndex == -1)
-                {
-                    textColor = Color.red;
                 }
             }
 
@@ -102,7 +103,11 @@ namespace RGSMS.Scene
 
             labelSceneNameArea.x += 90.0f;
 
-            GUI.color = textColor;
+            if (sceneBuildIndex.intValue == -1)
+            {
+                GUI.color = Color.red;
+            }
+
             EditorGUI.LabelField(labelSceneNameArea, sceneName, normalStyle);
             GUI.color = Color.white;
 
@@ -118,15 +123,49 @@ namespace RGSMS.Scene
 
             labelBuildIndexArea.x += 90.0f;
 
-            string indexLabel = sceneBuildIndex.intValue != -1 ? sceneBuildIndex.intValue.ToString() : $"Please, add the scene {sceneName} to Build Settings!";
+            string indexLabel;
+            
+            if (sceneBuildIndex.intValue != -1)
+            {
+                indexLabel = sceneBuildIndex.intValue.ToString();
+            }
+            else
+            {
+                if(string.IsNullOrEmpty(scenePath.stringValue))
+                {
+                    GUI.color = Color.yellow;
+                    indexLabel = "Please, select a scene!";
+                }
+                else
+                {
+                    GUI.color = Color.red;
+                    indexLabel = $"Please, add the scene {sceneName} to Build Settings!";
+                }
+            }
 
-            GUI.color = textColor;
             EditorGUI.LabelField(labelBuildIndexArea, indexLabel, normalStyle);
-            GUI.color = Color.white;
 
             #endregion
 
             property.serializedObject.ApplyModifiedProperties();
+        }
+
+        private string GetSceneName (string ScenePath)
+        {
+            string path = ScenePath;
+            string name = string.Empty;
+
+            for (int i = path.Length - 1; i >= 0; i--)
+            {
+                if (path[i] == '/')
+                {
+                    name = path.Remove(0, i + 1);
+
+                    break;
+                }
+            }
+
+            return name.Replace(".unity", string.Empty);
         }
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
