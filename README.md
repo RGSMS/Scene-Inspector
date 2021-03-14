@@ -14,7 +14,7 @@ Working on Unity version 2020.1 or later.
 
 ### Future Updates:
 1. More Examples
-2. COmment the entire code
+2. Comment the entire code
 3. Inspector Improvement
 
 ### Package Download:
