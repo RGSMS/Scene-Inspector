@@ -560,8 +560,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sceneToLoad:
-    _path: Assets/Scenes/SceneInspector/ExampleScene02.unity
-    _buildIndex: 1
+    _name: 
+    _path: Assets/Editor/SceneInspector/Scenes/EmptyScene.unity
+    _buildIndex: 0
 --- !u!4 &1437920465
 Transform:
   m_ObjectHideFlags: 0
