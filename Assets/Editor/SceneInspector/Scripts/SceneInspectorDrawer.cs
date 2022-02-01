@@ -133,6 +133,8 @@ namespace RGSMS.Scene
 
                     if (string.Compare(GetSceneName(currentScenePath), GetSceneName(scenePath.stringValue)) != 0)
                     {
+                        sceneBuildIndex.intValue = -1;
+                        scenePath.stringValue = string.Empty;
                         status = ESceneEditorStatus.LostScene;
                         return;
                     }
@@ -151,13 +153,39 @@ namespace RGSMS.Scene
 
                 if (buildIndex == -1)
                 {
+                    sceneBuildIndex.intValue = -1;
                     scenePath.stringValue = sceneCompletePath;
                     status = ESceneEditorStatus.NeedToAddToBuild;
                     return;
                 }
-            }
+                else
+                {
+                    string path = Application.dataPath;
+                    for (int i = path.Length - 1; i >= 0; i--)
+                    {
+                        if (path[i] == '/')
+                        {
+                            path = path.Remove(i + 1);
 
-            UpdateScenePathAndIndex(scenePath, sceneBuildIndex, sceneAsset, ref status);
+                            break;
+                        }
+                    }
+
+                    scenePath.stringValue = sceneCompletePath.Replace(path, string.Empty);
+                    
+                    buildIndex = SceneUtility.GetBuildIndexByScenePath(scenePath.stringValue);
+
+                    if (sceneBuildIndex.intValue != buildIndex)
+                    {
+                        sceneBuildIndex.intValue = buildIndex;
+
+                        if (sceneBuildIndex.intValue != -1)
+                        {
+                            status = ESceneEditorStatus.NeedToAddToBuild;
+                        }
+                    }
+                }
+            }
         }
 
         private void DrawSceneInfos (Rect position, SerializedProperty scenePath, int buildIndex, ESceneEditorStatus eStatus)
@@ -172,9 +200,7 @@ namespace RGSMS.Scene
 
             labelInfosArea.x += 70.5f;
 
-            string label = eStatus == ESceneEditorStatus.LostScene ? "-01" : buildIndex.ToString("00");
-
-            EditorGUI.LabelField(labelInfosArea, label);
+            EditorGUI.LabelField(labelInfosArea, buildIndex.ToString("00"));
 
             if (eStatus != ESceneEditorStatus.Empty &&
                 eStatus != ESceneEditorStatus.LostScene)
@@ -182,6 +208,8 @@ namespace RGSMS.Scene
                 labelInfosArea.x += 30.0f;
                 labelInfosArea.width += 8.0f;
                 labelInfosArea.width -= labelInfosArea.x;
+                labelInfosArea.height = 20.0f;
+                labelInfosArea.y += 41.0f;
 
                 scenePath.isExpanded = EditorGUI.ToggleLeft(labelInfosArea, scenePath.isExpanded ? scenePath.stringValue : "Show Path!", scenePath.isExpanded);
             }
@@ -294,24 +322,6 @@ namespace RGSMS.Scene
 
         private void UpdateScenePathAndIndex (SerializedProperty scenePath, SerializedProperty sceneBuildIndex, SceneAsset sceneAsset, ref ESceneEditorStatus status)
         {
-            if (sceneAsset != null)
-            {
-                string sceneCompletePath = AssetDatabase.GetAssetPath(sceneAsset);
-
-                string path = Application.dataPath;
-                for (int i = path.Length - 1; i >= 0; i--)
-                {
-                    if (path[i] == '/')
-                    {
-                        path = path.Remove(i + 1);
-
-                        break;
-                    }
-                }
-
-                scenePath.stringValue = sceneCompletePath.Replace(path, string.Empty);
-            }
-
             if (!string.IsNullOrEmpty(scenePath.stringValue))
             {
                 int buildIndex = SceneUtility.GetBuildIndexByScenePath(scenePath.stringValue);
@@ -325,6 +335,10 @@ namespace RGSMS.Scene
                         status = ESceneEditorStatus.NeedToAddToBuild;
                     }
                 }
+            }
+            else
+            {
+                sceneBuildIndex.intValue = -1;
             }
         }
 
