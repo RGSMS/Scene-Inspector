@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace RGSMS.Scene
+namespace RGSMS
 {
     /// <summary>
     /// Scene Information Reference

@@ -1,6 +1,6 @@
 using UnityEngine.SceneManagement;
 using UnityEngine;
-using RGSMS.Scene;
+using RGSMS;
 
 public class SceneLoader : MonoBehaviour
 {

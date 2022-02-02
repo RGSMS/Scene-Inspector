@@ -5,7 +5,7 @@ using UnityEditor;
 using System.Linq;
 using System.IO;
 
-namespace RGSMS.Scene
+namespace RGSMS
 {
     public enum ESceneEditorStatus
     {
