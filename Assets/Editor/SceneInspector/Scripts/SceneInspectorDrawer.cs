@@ -320,28 +320,6 @@ namespace RGSMS
             EditorGUI.DrawRect(backgroundRectLayerThree, _darkGrey);
         }
 
-        private void UpdateScenePathAndIndex (SerializedProperty scenePath, SerializedProperty sceneBuildIndex, SceneAsset sceneAsset, ref ESceneEditorStatus status)
-        {
-            if (!string.IsNullOrEmpty(scenePath.stringValue))
-            {
-                int buildIndex = SceneUtility.GetBuildIndexByScenePath(scenePath.stringValue);
-
-                if (sceneBuildIndex.intValue != buildIndex)
-                {
-                    sceneBuildIndex.intValue = buildIndex;
-
-                    if (sceneBuildIndex.intValue != -1)
-                    {
-                        status = ESceneEditorStatus.NeedToAddToBuild;
-                    }
-                }
-            }
-            else
-            {
-                sceneBuildIndex.intValue = -1;
-            }
-        }
-
         private string GetSceneName (string ScenePath)
         {
             string path = ScenePath;
