@@ -2,11 +2,13 @@
 
 ![Unity](https://img.shields.io/badge/Unity-100000?style=flat-square&logo=unity&logoColor=white)
 ![C#](https://img.shields.io/badge/C%23-239120?style=flat-square&logo=c-sharp&logoColor=white)
-[![Unity 2019.4+](https://img.shields.io/badge/unity-2019.4%2B-blue.svg)](https://unity3d.com/get-unity/download)
 
+[![Unity 2019.4+](https://img.shields.io/badge/unity-2019.4%2B-blue.svg)](https://unity3d.com/get-unity/download)
 ![GitHub last commit](https://img.shields.io/github/last-commit/RGSMS/Scene-Inspector)
 ![GitHub all releases](https://img.shields.io/github/downloads/RGSMS/Scene-Inspector/total)
 ![GitHub](https://img.shields.io/github/license/RGSMS/Scene-Inspector)
+
+[![Roadmap](https://img.shields.io/badge/roadmap-blue.svg)](https://trello.com/b/O3IBSlWV)
 
 [![Twitter Follow](https://img.shields.io/twitter/follow/BillyCoenWU?style=social)](https://twitter.com/BillyCoenWU)
 
